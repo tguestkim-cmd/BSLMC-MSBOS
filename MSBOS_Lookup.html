@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSBOS Blood Preparation Lookup — Baylor St. Luke's [BETA]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0f1e;
+    --surface:   #111827;
+    --surface2:  #1a2235;
+    --border:    #1f2f4a;
+    --text:      #e8edf8;
+    --muted:     #6b7fa3;
+    --accent:    #3b82f6;
+    --warn:      #f59e0b;
+    --danger:    #ef4444;
+    --tns:       #0ea5e9;  --tns-bg: #0c1e2e;
+    --c2:        #ef4444;  --c2-bg:  #2a1111;
+    --c4:        #f97316;  --c4-bg:  #2a1a0a;
+    --c6:        #eab308;  --c6-bg:  #271f00;
+    --c8:        #a855f7;  --c8-bg:  #1e1030;
+    --tx:        #22c55e;  --tx-bg:  #0a2018;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.08) 0%, transparent 60%),
+      linear-gradient(180deg, #0a0f1e 0%, #060b17 100%);
+  }
+
+  /* ── BETA BANNER ── */
+  .beta-banner {
+    background: linear-gradient(90deg,#1c1500,#271a00,#1c1500);
+    border-bottom: 1px solid #78450a;
+    padding: 9px 2rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    position: sticky; top: 0; z-index: 200;
+  }
+  .beta-banner-text {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    color: var(--warn); letter-spacing: 0.04em;
+  }
+  .beta-banner-text strong { color: #fcd34d; }
+  .beta-link {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--warn); background: none; border: none; cursor: pointer;
+    text-decoration: underline; text-decoration-color: rgba(245,158,11,0.4);
+    letter-spacing: 0.04em; transition: color 0.15s; padding: 0;
+  }
+  .beta-link:hover { color: #fcd34d; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,15,30,0.95); backdrop-filter: blur(12px);
+    position: sticky; top: 38px; z-index: 100; padding: 0 2rem;
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; height: 68px;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px; background: var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; color: #fff;
+  }
+  .logo-text { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--text); line-height: 1.2; }
+  .logo-sub { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .beta-chip {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem; font-weight: 700;
+    padding: 3px 8px; background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.35); border-radius: 4px;
+    color: var(--warn); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .header-badge {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    padding: 4px 10px; background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.3); border-radius: 20px;
+    color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero { padding: 3.5rem 2rem 2rem; max-width: 1200px; margin: 0 auto; text-align: center; }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem,4vw,2.8rem);
+    font-weight: 400; color: var(--text); line-height: 1.2; margin-bottom: 0.75rem;
+  }
+  .hero p { color: var(--muted); font-size: 0.95rem; font-weight: 300; max-width: 520px; margin: 0 auto 2.5rem; }
+  .search-wrap { position: relative; max-width: 640px; margin: 0 auto; }
+  .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 1.1rem; }
+  #search {
+    width: 100%; padding: 16px 18px 16px 50px;
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1rem; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #search::placeholder { color: var(--muted); }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59,130,246,0.12); }
+  .search-clear {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.1rem; display: none;
+  }
+  .search-clear:hover { color: var(--text); }
+  .search-clear.visible { display: block; }
+
+  /* ── FILTERS ── */
+  .filters-area { max-width: 1200px; margin: 0 auto; padding: 0 2rem 2rem; display: flex; flex-wrap: wrap; gap: 2rem; }
+  .filter-group { flex: 1; min-width: 200px; }
+  .filter-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 10px; display: block; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 5px 13px; border-radius: 20px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s; background: var(--surface2); color: var(--muted); user-select: none; }
+  .chip:hover { color: var(--text); border-color: var(--border); }
+  .chip.active-dept { background: rgba(59,130,246,0.15); border-color: var(--accent); color: #93c5fd; }
+  .chip.chip-tns.active { background: var(--tns-bg); border-color: var(--tns); color: var(--tns); }
+  .chip.chip-c2.active  { background: var(--c2-bg);  border-color: var(--c2);  color: var(--c2); }
+  .chip.chip-c4.active  { background: var(--c4-bg);  border-color: var(--c4);  color: var(--c4); }
+  .chip.chip-c6.active  { background: var(--c6-bg);  border-color: var(--c6);  color: var(--c6); }
+  .chip.chip-c8.active  { background: var(--c8-bg);  border-color: var(--c8);  color: var(--c8); }
+  .chip.chip-tx.active  { background: var(--tx-bg);  border-color: var(--tx);  color: var(--tx); }
+
+  /* ── RESULTS ── */
+  .results-area { max-width: 1200px; margin: 0 auto; padding: 0 2rem 6rem; }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+  .results-count { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+  .results-count span { color: var(--text); }
+  #results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    cursor: pointer; animation: fadeUp 0.25s ease both; position: relative;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); border-color: rgba(59,130,246,0.25); }
+  .card:hover .flag-btn { opacity: 1; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .flag-btn {
+    position: absolute; top: 14px; right: 14px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 4px 8px; font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    color: var(--muted); cursor: pointer; opacity: 0; transition: all 0.15s;
+    display: flex; align-items: center; gap: 4px; z-index: 2; letter-spacing: 0.04em;
+  }
+  .flag-btn:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: var(--danger); }
+  .card-accent-bar { height: 3px; width: 100%; }
+  .bar-tns { background: linear-gradient(90deg, var(--tns), #38bdf8); }
+  .bar-c2  { background: linear-gradient(90deg, var(--c2), #fca5a5); }
+  .bar-c4  { background: linear-gradient(90deg, var(--c4), #fdba74); }
+  .bar-c6  { background: linear-gradient(90deg, var(--c6), #fde047); }
+  .bar-c8  { background: linear-gradient(90deg, var(--c8), #d8b4fe); }
+  .bar-tx  { background: linear-gradient(90deg, var(--tx), #86efac); }
+  .card-body { padding: 16px 18px 18px; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .dept-tag { font-family: 'Space Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); background: var(--surface2); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .cat-badge { font-family: 'Space Mono', monospace; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .badge-tns { background: var(--tns-bg); color: var(--tns); border: 1px solid rgba(14,165,233,0.3); }
+  .badge-c2  { background: var(--c2-bg);  color: var(--c2);  border: 1px solid rgba(239,68,68,0.3); }
+  .badge-c4  { background: var(--c4-bg);  color: var(--c4);  border: 1px solid rgba(249,115,22,0.3); }
+  .badge-c6  { background: var(--c6-bg);  color: var(--c6);  border: 1px solid rgba(234,179,8,0.3); }
+  .badge-c8  { background: var(--c8-bg);  color: var(--c8);  border: 1px solid rgba(168,85,247,0.3); }
+  .badge-tx  { background: var(--tx-bg);  color: var(--tx);  border: 1px solid rgba(34,197,94,0.3); }
+  .card h3 { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 10px; }
+  .blood-box { background: var(--surface2); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .blood-item { display: flex; flex-direction: column; gap: 2px; }
+  .blood-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .blood-value { font-family: 'Space Mono', monospace; font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .blood-value.tns-val { color: var(--tns); }
+  .blood-value.big { font-size: 0.9rem; color: var(--muted); font-weight: 400; }
+  .epic-section { margin-bottom: 8px; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px; }
+  .epic-codes { display: flex; flex-wrap: wrap; gap: 4px; }
+  .epic-pill { font-family: 'Space Mono', monospace; font-size: 0.62rem; padding: 2px 8px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.18); border-radius: 4px; color: #93c5fd; line-height: 1.5; }
+  .conditions { font-size: 0.78rem; color: #94a3b8; line-height: 1.5; font-weight: 300; font-style: italic; border-left: 2px solid var(--border); padding-left: 10px; margin-top: 8px; }
+  .empty-state { grid-column: 1/-1; text-align: center; padding: 5rem 2rem; }
+  .empty-state .big-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+  .empty-state p { color: var(--muted); font-size: 0.95rem; }
+
+  /* ── FAB ── */
+  .fab {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 150;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 50px;
+    padding: 12px 20px; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500; color: var(--text);
+  }
+  .fab:hover { border-color: var(--accent); box-shadow: 0 12px 40px rgba(59,130,246,0.2); transform: translateY(-2px); }
+
+  /* ── OVERLAYS & MODALS ── */
+  .overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(6,11,23,0.88); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 2rem;
+  }
+  .overlay.open { display: flex; animation: oIn 0.2s ease; }
+  @keyframes oIn { from { opacity:0; } to { opacity:1; } }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto;
+    animation: mIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal.sm { max-width: 520px; }
+  @keyframes mIn { from { transform:scale(0.92) translateY(20px); opacity:0; } to { transform:scale(1) translateY(0); opacity:1; } }
+  .modal-hdr { padding: 24px 24px 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .modal-close { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); cursor: pointer; width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+  .modal-close:hover { color: var(--text); border-color: var(--muted); }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; line-height: 1.3; color: var(--text); }
+  .modal-bdy { padding: 20px 24px 28px; }
+
+  /* Procedure detail */
+  .blood-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 16px 0; }
+  .blood-card { background: var(--surface2); border-radius: 12px; padding: 14px 16px; text-align: center; }
+  .blood-card .bv { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .blood-card .bl { font-family: 'Space Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .msec { margin-top: 18px; }
+  .msec-title { font-family: 'Space Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .msec p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; font-weight: 300; }
+  .epic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .epic-list li { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: #93c5fd; padding: 5px 10px; background: rgba(59,130,246,0.07); border-radius: 6px; border: 1px solid rgba(59,130,246,0.15); }
+
+  /* ── DISCLAIMER MODAL ── */
+  .disc-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .disc-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--text); margin-bottom: 4px; }
+  .disc-sub { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--warn); text-transform: uppercase; letter-spacing: 0.08em; }
+  .disc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+  .disc-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.88rem; color: #94a3b8; line-height: 1.5; }
+  .disc-list li .di { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .disc-note { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+  .btn-primary { width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; color: #fff; transition: all 0.15s; }
+  .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+  .btn-ghost { width: 100%; padding: 11px; background: transparent; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; color: var(--muted); transition: all 0.15s; margin-top: 8px; }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+  /* ── FEEDBACK MODAL ── */
+  .fb-type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+  .type-btn { padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); cursor: pointer; text-align: left; transition: all 0.15s; display: flex; flex-direction: column; gap: 3px; }
+  .type-btn:hover { border-color: var(--muted); }
+  .type-btn.sel-err  { border-color: var(--danger); background: rgba(239,68,68,0.08); }
+  .type-btn.sel-fb   { border-color: var(--accent); background: rgba(59,130,246,0.08); }
+  .tb-icon { font-size: 1.1rem; }
+  .tb-label { font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .tb-sub { font-size: 0.72rem; color: var(--muted); font-weight: 300; }
+  .fform .ff { margin-bottom: 14px; }
+  .ff label { font-family: 'Space Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 6px; }
+  .ff input, .ff select, .ff textarea { width: 100%; padding: 10px 14px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
+  .ff input:focus, .ff select:focus, .ff textarea:focus { border-color: var(--accent); }
+  .ff textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+  .ff input::placeholder, .ff textarea::placeholder { color: var(--muted); }
+  .ff-actions { display: flex; gap: 8px; margin-top: 6px; }
+  .btn-sub { flex: 1; padding: 12px; background: var(--accent); border: none; border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; color: #fff; transition: background 0.15s; }
+  .btn-sub:hover { background: #2563eb; }
+  .btn-sub.err { background: var(--danger); }
+  .btn-sub.err:hover { background: #dc2626; }
+  .btn-can { padding: 12px 18px; background: transparent; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--muted); transition: all 0.15s; }
+  .btn-can:hover { border-color: var(--muted); color: var(--text); }
+  .fb-success { text-align: center; padding: 2rem 1rem; }
+  .fb-success .sicon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .fb-success h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
+  .fb-success p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1.25rem 1.5rem; }
+    .filters-area, .results-area { padding-left: 1.25rem; padding-right: 1.25rem; }
+    #results-grid { grid-template-columns: 1fr; }
+    .blood-box { grid-template-columns: 1fr; }
+    .fb-type-row { grid-template-columns: 1fr; }
+    .header-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BETA BANNER -->
+<div class="beta-banner">
+  <span>⚠️</span>
+  <span class="beta-banner-text">
+    <strong>BETA</strong> — This tool is under active review. Always verify against official MSBOS policy documents.
+  </span>
+  <button class="beta-link" onclick="openDisclaimer()">View full disclaimer</button>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">Rx</div>
+      <div>
+        <div class="logo-text">MSBOS Lookup</div>
+        <div class="logo-sub">Baylor St. Luke's Medical Center</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="beta-chip">BETA</span>
+      <div class="header-badge">Blood Bank Reference</div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Maximum Surgical Blood Order Schedule</div>
+  <h1>How much blood needs<br>to be prepared?</h1>
+  <p>Search by procedure name, EPIC code, or department to instantly find blood preparation requirements.</p>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder='Search procedure, e.g. "Bentall" or "TAVR" or "Bypass"…' autocomplete="off" spellcheck="false">
+    <button class="search-clear" id="search-clear" title="Clear">✕</button>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-area">
+  <div class="filter-group">
+    <span class="filter-label">Department</span>
+    <div class="chip-row" id="dept-filters">
+      <div class="chip active-dept" data-dept="all">All</div>
+      <div class="chip" data-dept="CVOR">CVOR</div>
+      <div class="chip" data-dept="CVOR – Transplants">Transplants</div>
+      <div class="chip" data-dept="Orthopedic">Orthopedic</div>
+      <div class="chip" data-dept="General OR">General OR</div>
+    </div>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Blood Order Category</span>
+    <div class="chip-row" id="cat-filters">
+      <div class="chip chip-tns" data-cat="all">All</div>
+      <div class="chip chip-tns" data-cat="tns">Type &amp; Screen</div>
+      <div class="chip chip-c2"  data-cat="c2">2 Units RBC</div>
+      <div class="chip chip-c4"  data-cat="c4">4 Units RBC</div>
+      <div class="chip chip-c6"  data-cat="c6">6 Units RBC</div>
+      <div class="chip chip-c8"  data-cat="c8">8 Units RBC</div>
+      <div class="chip chip-tx"  data-cat="tx">Transplant</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-area">
+  <div class="results-header">
+    <div class="results-count" id="results-count"><span>—</span> procedures</div>
+  </div>
+  <div id="results-grid"></div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openFeedback(null)">💬 Feedback / Report Error</button>
+
+<!-- DISCLAIMER OVERLAY -->
+<div class="overlay" id="disc-overlay">
+  <div class="modal sm">
+    <div class="modal-hdr">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div class="disc-icon">⚠️</div>
+        <div>
+          <div class="disc-title">Beta Version Disclaimer</div>
+          <div class="disc-sub">MSBOS Lookup · Baylor St. Luke's</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-bdy">
+      <ul class="disc-list">
+        <li><span class="di">🔬</span><span>This application is in <strong style="color:var(--warn)">active beta development</strong> and has not been validated for clinical use. Data may contain errors or omissions.</span></li>
+        <li><span class="di">📄</span><span>Always cross-reference results against the <strong style="color:var(--text)">official printed MSBOS policy documents</strong> maintained by the Blood Bank.</span></li>
+        <li><span class="di">🩺</span><span>Clinical decisions must be made by <strong style="color:var(--text)">qualified clinical staff</strong> using verified institutional protocols.</span></li>
+        <li><span class="di">🔄</span><span>This tool reflects the MSBOS as of its last update. Interim policy changes may not yet be reflected.</span></li>
+        <li><span class="di">🚩</span><span>If you spot a discrepancy, use the <strong style="color:var(--text)">Report an Error</strong> button on any card or the Feedback button at the bottom-right.</span></li>
+      </ul>
+      <div class="disc-note">
+        This application is intended as a <strong>quick-reference aid only</strong> — to support, not replace, established Blood Bank workflows and clinical judgment.
+      </div>
+      <button class="btn-primary" onclick="acceptDisclaimer()">I understand — continue to app</button>
+      <button class="btn-ghost" onclick="closeDisclaimer(); openFeedback(null);">Have feedback? Let us know</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL OVERLAY -->
+<div class="overlay" id="detail-overlay">
+  <div class="modal" id="detail-modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-bdy" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- FEEDBACK OVERLAY -->
+<div class="overlay" id="fb-overlay">
+  <div class="modal sm" id="fb-modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="fb-title">Feedback &amp; Error Reporting</div>
+      <button class="modal-close" onclick="closeFeedback()">✕</button>
+    </div>
+    <div class="modal-bdy" id="fb-body"></div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"(Epicardial) VT Ablation",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Atrial Fibrillation Ablation",epic:[],rbcs:"TNS",other:"",conditions:"Cath lab procedures only; majority require general anesthesia"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"ACB / CAB (Aorto-Coronary Bypass) — Limited Access",epic:["Bypass, Aorto Coronary IMA","Bypass, Aorto Coronary IMA/SVG","Bypass, Aorto Coronary Off Pump","Bypass, Aorto Coronary Vein"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"AICD / Pacemaker Implantation, ICD Sub-Q Array",epic:["Implant, AICD","Insertion/Replacement, Pacemaker","Removal, AICD","Revision, AICD","AICD Generator Change-Remove & Replace"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Amputation (various)",epic:["Amputation, Above Knee","Amputation, Arm","Amputation, Below Knee","Amputation, Finger/Thumb","Amputation, Foot","Amputation, Hand"],rbcs:"TNS",other:"",conditions:"NOTE: Above Knee Amputation is also on Orthopedic MSBOS as requiring 2 units"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"ASD / VSD Repair",epic:["Closure, Atrial Septal Defect","Closure, Ventricular Septal Defect"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Atrial Myxoma",epic:["Resection, Atrial Myxoma"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"AV Shunt / Graft / Fistula",epic:["Insertion, A-V Graft","Creation, A-V Fistula","Creation, A-V Fistula by Basilic Vein Transposition","Removal, A-V Graft","Revision/Ligation, A-V Fistula"],rbcs:"TNS",other:"",conditions:"May want blood products set up for Removal, A-V Graft — doctor dependent"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Balloon Pump Insertion / Removal (IABP)",epic:["IABP Insertion"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"CEA (Carotid Endarterectomy) — Left or Right",epic:["Endarterectomy, Carotid"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"ECMO Removal or Placement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Embolectomy",epic:["Embolectomy, Pulmonary w/ Bypass","Embolectomy, Pulmonary w/o Bypass"],rbcs:"TNS",other:"",conditions:"Usually an emergency; may not be on regular surgery schedule"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Endoleak Exclusion (CVOR CASES ONLY)",epic:["Repair, AAA Exclusion","Repair, ADTA Exclusion"],rbcs:"TNS",other:"",conditions:"CVOR cases only — for Cath Lab cases refer to 4-unit list. Negative antibody screen & non-redo only."},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"EVR — Endovascular Repair",epic:["Repair, AAA Exclusion","Repair, ADTA Exclusion"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Fem-Fem Bypass",epic:["Bypass, Femoral-Femoral"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Femoral Artery Reconstruction",epic:["Endarterectomy, Femoral","Repair, Artery w/Suture","Repair, Artery w/ Vein Graft"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Fem-Pop Bypass",epic:["Bypass, Femoral-Popliteal","Bypass, Femoral-Tibial","Repair, Aneurysm Femoral/Popliteal"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Generator Change (PPM or AICD)",epic:["Pacemaker Generator Remove and Replace","AICD Generator Remove and Replace","Gen Change","Generator Change"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Impella Insertion, Removal or Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"IVC Filter Placement",epic:["Insertion, Vena Cava Umbrella"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"L/R Brachial Artery Bypass",epic:["Repair, Artery w/Suture"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Laser Lead Extraction",epic:["Laser Lead Extraction"],rbcs:"TNS",other:"",conditions:"Always a pump stand-by. Cardiologists schedule with a backup surgeon."},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"LCEA / ACB (Combined CEA & Coronary Bypass)",epic:["Endarterectomy, Carotid","Bypass, Aorto Coronary IMA","Bypass, Aorto Coronary IMA/SVG","Bypass, Aorto Coronary Off Pump","Bypass, Aorto Coronary Vein"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"MAZE",epic:["MAZE, CRYO","MAZE, EPICOR","MAZE, RF"],rbcs:"TNS",other:"",conditions:"Usually done in combination with Mitral/Aortic Valve cases. If scheduled as MAZE CRYO only, blood products need to be set up (done on pump). MAZE EPICOR device no longer in use."},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Mediastinoscopy / Mediastinal Biopsy",epic:["Mediastinoscopy"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Pacemaker (PM or PPM)",epic:["Insertion/Replacement, Pacemaker","Revision, Pacemaker","Revision, Pacemaker Lead","Pacemaker Leads-Insertion","Pacemaker Generator Change-Remove & Replace"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Paraprosthetic Valve Leak Repair",epic:["Paraprosthetic Valve Leak Repair"],rbcs:"TNS",other:"",conditions:"Cath Lab procedure"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Pericardiectomy",epic:["Pericardiectomy","Pericardiectomy w/ Cardiopulmonary Bypass"],rbcs:"TNS",other:"",conditions:"Needs blood set-up regardless of how it is scheduled"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Pericardiocentesis",epic:["Pericardiocentesis"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"PTCA (Percutaneous Transluminal Coronary Angioplasty)",epic:[],rbcs:"TNS",other:"",conditions:"Cath lab procedures only; no CVOR scheduling procedures found"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"PTCA / ACB",epic:[],rbcs:"TNS",other:"",conditions:"Cath lab procedures only; no CVOR scheduling procedures found"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Repair, IHSS / Subaortic Stenosis",epic:["Repair, IHSS/Subaortic Stenosis"],rbcs:"TNS",other:"",conditions:"Pump case; may be done alone or in conjunction with an AVR"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Sternal Revision",epic:["Revision, Sternal"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Subclavian to Carotid Bypass",epic:["Bypass, Carotid-Carotid","Bypass, Carotid-Subclavian","Bypass, Aorto-Carotid/Subclavian"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Tandem Heart",epic:["Tandem Heart"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Thoracoscopy / VATS",epic:["Thoracoscopy","Thoracoscopy, Decortication","Thoracoscopy, Lung Biopsy","Thoracoscopy, Pleurodesis","Thoracoscopy, Sympathectomy"],rbcs:"TNS",other:"",conditions:"All thoracoscopies have potential to become a thoracotomy"},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Thoracotomy",epic:["Thoracotomy","Thoracotomy, Decortication","Thoracotomy, Ligation Thoracic Duct","Thoracotomy, Lobectomy LUL","Thoracotomy, Pneumonectomy"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Transcatheter Mitral Valve Leak Repair",epic:["Transcatheter Mitral Valve Leak Repair"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Valve Repair / Plasty",epic:["Valvuloplasty, Aortic","Valvuloplasty, Mitral","Valvuloplasty, Tricuspid","TVP (Tricuspid Valve Annuloplasty)"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only. Positive screen or redo → 4 units."},
+  {dept:"CVOR",cat:"tns",catLabel:"Type & Screen",proc:"Valve Replacement (VR)",epic:["Replacement, Valve Aortic","Replacement, Valve Aortic Minimally Invasive","Replacement, Valve Mitral","Replacement, Valve Pulmonary","Replacement, Valve Tricuspid"],rbcs:"TNS",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only. Positive screen or redo → 4 units."},
+  {dept:"CVOR",cat:"c2",catLabel:"T&C – 2 Units RBC",proc:"Aortic Valve Repair – TAVR / TAVI / CoreValve / TEVAR",epic:["TAVR (Transcatheter Aortic Valve Replacement)","TAVI (Transcatheter Aortic Valve Implantation)","CoreValve (Medtronic)","Edwards SAPIEN Transcatheter Heart Valve","TEVAR (Thoracic Endovascular Aortic Repair)"],rbcs:"2",other:"",conditions:"Negative antibody screen & non-redo only. Positive screen or redo → crossmatch 4 RBCs. Cath Lab and CVOR rooms 11-12."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"AAA Exclusion (Positive antibody screen or redo only)",epic:["Repair, AAA Exclusion","Repair, ADTA Exclusion"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"AATA — Aneurysm of the Ascending Thoracic Aorta (Primary / Negative Screen)",epic:["Repair, AATA (Aneurysm Ascending Thoracic Aorta)"],rbcs:"4",other:"",conditions:"Primary cases or patients with a negative antibody screen only. Redo or positive screen → 8 units."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"ABF (Aorto Bilateral Femoral) / ABI (Aorto Bilateral Iliac)",epic:["Bypass, Aorto-Femoral","Bypass, Aorto-Iliac"],rbcs:"4",other:"",conditions:"Also listed under T&C 6 Units"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"ACB / CAB — Limited Access (Positive antibody screen or redo only)",epic:["Bypass, Aorto Coronary IMA","Bypass, Aorto Coronary IMA/SVG","Bypass, Aorto Coronary Off Pump","Bypass, Aorto Coronary Vein"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Aortic Abdominal Aneurysm (AAA)",epic:["Repair, AAA"],rbcs:"4",other:"",conditions:""},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Aortic Bi-Femoral Bypass",epic:["Bypass, Aorto-Femoral","Bypass, Aorto-Iliac"],rbcs:"4",other:"",conditions:"Also listed under T&C 6 Units. Also an abdominal aneurysm."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Aortic Valve Repair – TAVR / TAVI / CoreValve / TEVAR (Positive Screen or Redo)",epic:["TAVR","TAVI","CoreValve (Medtronic)","Edwards SAPIEN Transcatheter Heart Valve","TEVAR"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only. Cath Lab and CVOR rooms 11-12."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Apico Aortic Conduit (Primary / Negative Screen)",epic:["Implant, Left Ventricular Apico-Aortic Conduit"],rbcs:"4",other:"",conditions:"Primary cases or patients with a negative antibody screen only. Redo or positive screen → 8 units."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"ASD / VSD Repair (Positive antibody screen or redo only)",epic:["Closure, Atrial Septal Defect","Closure, Ventricular Septal Defect"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Atrial Myxoma (Positive antibody screen or redo only)",epic:["Resection, Atrial Myxoma"],rbcs:"4",other:"",conditions:"Pump case. For patients with a positive antibody screen or redo cases only."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Bentall (Primary / Negative Screen)",epic:["Bentall"],rbcs:"4",other:"",conditions:"Primary cases or patients with a negative antibody screen only. Redo or positive screen → 8 units."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Endoleak Exclusion (CATH LAB CASES ONLY)",epic:[],rbcs:"4",other:"",conditions:"Cath lab cases only. For CVOR case refer to TNS list. Not usually found on CVOR scheduling."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"EVR — Endovascular Repair (Positive antibody screen or redo only)",epic:["Repair, AAA Exclusion","Repair, ADTA Exclusion"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"LCEA / ACB (Positive antibody screen or redo only)",epic:["Endarterectomy, Carotid","Bypass, Aorto Coronary IMA","Bypass, Aorto Coronary IMA/SVG","Bypass, Aorto Coronary Off Pump","Bypass, Aorto Coronary Vein"],rbcs:"4",other:"",conditions:"Combination procedure with ACB scheduled. For patients with a positive antibody screen or redo cases only."},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Left Atrial Appendage Closure",epic:[],rbcs:"4",other:"",conditions:"Cath Lab; general anesthesia"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Liver Resection",epic:["Resection, Liver","Hepatectomy, Partial"],rbcs:"4",other:"",conditions:"If cell saver needed, surgeon will schedule accordingly (Dr. Goss)"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"LVA (Left Ventricular Aneurysm)",epic:["Repair, LVA (Ventricular Aneurysm)"],rbcs:"4",other:"",conditions:""},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Valve Repair / Plasty (Positive antibody screen or redo only)",epic:["Valvuloplasty, Aortic","Valvuloplasty, Mitral","Valvuloplasty, Tricuspid","TVP (Tricuspid Valve Annuloplasty)"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Valve Replacement (Positive antibody screen or redo only)",epic:["Replacement, Valve Aortic","Replacement, Valve Aortic Minimally Invasive","Replacement, Valve Mitral","Replacement, Valve Pulmonary","Replacement, Valve Tricuspid"],rbcs:"4",other:"",conditions:"For patients with a positive antibody screen or redo cases only"},
+  {dept:"CVOR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Whipple",epic:["Whipple"],rbcs:"4",other:"",conditions:"Usually done in Main OR; occasionally CVOR"},
+  {dept:"CVOR",cat:"c6",catLabel:"T&C – 6 Units RBC",proc:"ADTA — Aneurysm of the Descending Thoracic Aorta (Negative Screen / Non-Redo)",epic:["Repair, ADTA (Aneurysm Descending Thoracic Aorta)"],rbcs:"6",other:"",conditions:"For patients with a negative antibody screen and non-redo cases only. Redo or positive screen → 8 units."},
+  {dept:"CVOR",cat:"c6",catLabel:"T&C – 6 Units RBC",proc:"Any REDO Pump Case",epic:[],rbcs:"6",other:"",conditions:"Noted in surgeon's office comments when scheduling. Always has potential to become emergent pump case."},
+  {dept:"CVOR",cat:"c6",catLabel:"T&C – 6 Units RBC",proc:"Extrapleural Pneumonectomy",epic:["Extrapleural Pneumonectomy"],rbcs:"6",other:"",conditions:"New procedure – Dr. Sugarbaker"},
+  {dept:"CVOR",cat:"c6",catLabel:"T&C – 6 Units RBC",proc:"Limited Access (ACB Redo)",epic:[],rbcs:"6",other:"",conditions:"Captured under 'Any REDO Pump Case'; always has potential to become emergent pump case"},
+  {dept:"CVOR",cat:"c8",catLabel:"T&C – 8 Units RBC",proc:"AATA — Aneurysm of the Ascending Thoracic Aorta (Positive Screen or Redo)",epic:["Repair, AATA (Aneurysm Ascending Thoracic Aorta)","Redo median-sternotomy"],rbcs:"8",other:"8 RBCs or 8 Whole Bloods",conditions:"For patients with a positive antibody screen and/or redo cases. Primary/negative screen → 4 units."},
+  {dept:"CVOR",cat:"c8",catLabel:"T&C – 8 Units RBC",proc:"ADTA — Aneurysm of the Descending Thoracic Aorta (Positive Screen or Redo)",epic:["Repair, ADTA (Aneurysm Descending Thoracic Aorta)"],rbcs:"8",other:"",conditions:"For patients with a positive antibody screen and/or redo cases. Primary/negative screen → 6 units."},
+  {dept:"CVOR",cat:"c8",catLabel:"T&C – 8 Units RBC",proc:"Apico Aortic Conduit (Positive Screen or Redo)",epic:["Implant, Left Ventricular Apico-Aortic Conduit"],rbcs:"8",other:"",conditions:"For patients with a positive antibody screen and/or redo cases. Primary/negative screen → 4 units."},
+  {dept:"CVOR",cat:"c8",catLabel:"T&C – 8 Units RBC",proc:"Bentall (Positive Screen or Redo)",epic:["Bentall"],rbcs:"8",other:"",conditions:"For patients with a positive antibody screen and/or redo cases. Primary/negative screen → 4 units."},
+  {dept:"CVOR",cat:"c8",catLabel:"T&C – 8 Units RBC",proc:"TAA / TAAA (Thoracoabdominal Aneurysm)",epic:["Repair, Aneurysm Thoracoabdominal Aortic w/Bypass","Repair, Aneurysm Thoracoabdominal Aortic w/o Bypass (TAA)"],rbcs:"8",other:"8 RBCs or 8 Whole Bloods",conditions:""},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"Heart Transplant",epic:["Transplant, Heart","Transplant, Heart & Lungs"],rbcs:"10",other:"10 FFP + 4 PLTs",conditions:""},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"Kidney Transplant",epic:["Transplant, Kidney-Cadaver","Transplant, Kidney-Living"],rbcs:"TNS",other:"If antibody screen positive → prepare 4 RBCs",conditions:"TNS if negative screen; prepare 4 RBCs if positive antibody screen"},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"Pancreas Transplant",epic:["Transplant, Pancreas"],rbcs:"4",other:"",conditions:""},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"Liver Transplant",epic:["Transplant, Liver"],rbcs:"6",other:"6 FFP + 4 PLTs",conditions:""},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"Lung Transplant",epic:["Transplant, Lung w/Bypass","Transplant, Lung w/o Bypass"],rbcs:"10",other:"10 FFP + 4 PLTs",conditions:""},
+  {dept:"CVOR – Transplants",cat:"tx",catLabel:"Transplant Order",proc:"LVAD (Left Ventricular Assist Device)",epic:[],rbcs:"10",other:"10 FFP + 4 PLTs",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Arthrotomy & Prosthesis Removal",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Below Knee Amputation (BKA)",epic:["Amputation, Below Knee"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Cervical Fusion / Laminectomy",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Excision of Bony Lesion / Bone Graft",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Intertrochanteric Femur / Hip Fracture",epic:["Right Trochanteric Femoral Nailing (Synthesis Trochanteric Femoral Nail)","ORIF of Left Intertrochanteric Femur","Pinning Right Femoral Neck"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Partial Hip Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Partial Shoulder Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Revision of Hip Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Revision of Knee Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Total Elbow Replacement",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Total Hip Replacement",epic:["Arthroplasty, Hip"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"tns",catLabel:"Type & Screen",proc:"Total Knee Replacement",epic:["Arthroplasty, Knee"],rbcs:"TNS",other:"",conditions:""},
+  {dept:"Orthopedic",cat:"c2",catLabel:"T&C – 2 Units RBC",proc:"Above Knee Amputation (AKA)",epic:["Amputation, Above Knee"],rbcs:"2",other:"",conditions:"Also on CVOR MSBOS as Type & Screen"},
+  {dept:"Orthopedic",cat:"c2",catLabel:"T&C – 2 Units RBC",proc:"Lumbar Fusion / Refusion (any level, single or multiple levels)",epic:["Laminectomy, Lumbar","Laminectomy, Lumbar with Internal Fixation","Laminectomy, Lumbar with Discectomy"],rbcs:"2",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Abdominal Peritoneal Resection (APR)",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Colectomy, Partial or Total",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Craniotomy for Tumor Resection",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Esophageal Resection",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Gastrectomy",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Labor and Delivery — All Vaginal and Cesarean Deliveries",epic:[],rbcs:"TNS",other:"",conditions:"Include in all Labor and Delivery Departmental Order Sets"},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Nephrectomy (any — robotic assisted or non-robot assisted)",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Nephrectomy, Robotic Assisted — Partial or Radical",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Pancreatectomy (or any surgical resection of pancreas)",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Radical Cystectomy",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Rectal Resection",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Splenectomy (open or laparoscopic)",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"tns",catLabel:"Type & Screen",proc:"Total Abdominal Hysterectomy / Oophorectomy with Tumor Debulking",epic:[],rbcs:"TNS",other:"",conditions:""},
+  {dept:"General OR",cat:"c4",catLabel:"T&C – 4 Units RBC",proc:"Whipple",epic:["Whipple"],rbcs:"4",other:"",conditions:"Usually done in Main OR; occasionally CVOR"},
+];
+
+// ── State ──────────────────────────────────────────────
+let activeDept = "all", activeCat = "all", searchQ = "";
+let fbProc = null, fbType = null;
+
+// ── Helpers ────────────────────────────────────────────
+const barCls  = c => `card-accent-bar bar-${c}`;
+const badgeCls = c => `cat-badge badge-${c}`;
+function rbcDisp(r) {
+  return r === "TNS"
+    ? {v:"TNS", cls:"blood-value tns-val"}
+    : {v:r+" u", cls:"blood-value"};
+}
+function hl(t,q) {
+  if (!q) return t;
+  return t.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, "gi"),
+    '<mark style="background:rgba(59,130,246,0.35);color:#fff;border-radius:2px;padding:0 2px">$1</mark>');
+}
+function matches(item, q) {
+  if (!q) return true;
+  const s = q.toLowerCase();
+  return item.proc.toLowerCase().includes(s)
+    || item.epic.some(e => e.toLowerCase().includes(s))
+    || item.dept.toLowerCase().includes(s)
+    || item.catLabel.toLowerCase().includes(s)
+    || item.conditions.toLowerCase().includes(s);
+}
+
+// ── Render ─────────────────────────────────────────────
+function render() {
+  const grid = document.getElementById("results-grid");
+  const cnt  = document.getElementById("results-count");
+  grid.innerHTML = "";
+  const filtered = DATA.filter(item =>
+    (activeDept === "all" || item.dept === activeDept) &&
+    (activeCat  === "all" || item.cat  === activeCat)  &&
+    matches(item, searchQ)
+  );
+  cnt.innerHTML = `<span>${filtered.length}</span> procedure${filtered.length!==1?"s":""} found`;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="big-icon">🩸</div><p>No procedures match your search.<br>Try different keywords or clear filters.</p></div>`;
+    return;
+  }
+  filtered.forEach((item, idx) => {
+    const d = rbcDisp(item.rbcs);
+    const ep = item.epic.slice(0,2).map(e=>`<span class="epic-pill">${hl(e,searchQ)}</span>`).join("")
+      + (item.epic.length>2?`<span class="epic-pill">+${item.epic.length-2} more</span>`:"");
+    const di = DATA.indexOf(item);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = `${Math.min(idx,20)*20}ms`;
+    card.innerHTML = `
+      <div class="${barCls(item.cat)}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="dept-tag">${item.dept}</span>
+          <span class="${badgeCls(item.cat)}">${item.catLabel}</span>
+        </div>
+        <h3>${hl(item.proc,searchQ)}</h3>
+        <div class="blood-box">
+          <div class="blood-item">
+            <div class="blood-label">RBC Units</div>
+            <div class="${d.cls}">${d.v}</div>
+          </div>
+          ${item.other?`<div class="blood-item"><div class="blood-label">Additional</div><div class="blood-value big">${item.other}</div></div>`:""}
+        </div>
+        ${ep?`<div class="epic-section"><div class="section-label">EPIC Code(s)</div><div class="epic-codes">${ep}</div></div>`:""}
+        ${item.conditions?`<div class="conditions">${hl(item.conditions,searchQ)}</div>`:""}
+      </div>
+      <button class="flag-btn">🚩 Report error</button>`;
+    card.querySelector(".flag-btn").addEventListener("click", e => { e.stopPropagation(); openFeedback(item.proc, "error"); });
+    card.addEventListener("click", () => openDetail(di));
+    grid.appendChild(card);
+  });
+}
+
+// ── Detail modal ───────────────────────────────────────
+function openDetail(idx) {
+  const item = DATA[idx];
+  document.getElementById("modal-title").textContent = item.proc;
+  const col = {tns:"var(--tns)",c2:"var(--c2)",c4:"var(--c4)",c6:"var(--c6)",c8:"var(--c8)",tx:"var(--tx)"}[item.cat];
+  let extra = "";
+  if (item.other) item.other.split("+").map(s=>s.trim()).filter(Boolean).forEach(p=>{
+    const m = p.match(/^(\d+)\s+(.+)$/);
+    extra += `<div class="blood-card"><div class="bv" style="color:var(--muted)">${m?m[1]:p}</div><div class="bl">${m?m[2]:"Additional"}</div></div>`;
+  });
+  document.getElementById("modal-body").innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+      <span class="dept-tag">${item.dept}</span>
+      <span class="${badgeCls(item.cat)}">${item.catLabel}</span>
+    </div>
+    <div class="blood-row">
+      <div class="blood-card">
+        <div class="bv" style="color:${col}">${item.rbcs==="TNS"?"TNS":item.rbcs}</div>
+        <div class="bl">${item.rbcs==="TNS"?"Type & Screen":"RBC Units"}</div>
+      </div>${extra}
+    </div>
+    ${item.conditions?`<div class="msec"><div class="msec-title">Conditions / Notes</div><p>${item.conditions}</p></div>`:""}
+    ${item.epic.length?`<div class="msec"><div class="msec-title">EPIC Procedure Codes</div><ul class="epic-list">${item.epic.map(e=>`<li>${e}</li>`).join("")}</ul></div>`:""}
+    <div class="msec">
+      <div class="msec-title">⚠️ Beta Notice</div>
+      <p>Verify against the official MSBOS policy document before use. &nbsp;
+        <button onclick="closeDetail();openFeedback('${item.proc.replace(/'/g,"\\'")}','error')"
+          style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:inherit;padding:0;text-decoration:underline">
+          Report an error
+        </button>
+      </p>
+    </div>`;
+  document.getElementById("detail-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeDetail() {
+  document.getElementById("detail-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.getElementById("detail-overlay").addEventListener("click", e => { if(e.target===document.getElementById("detail-overlay")) closeDetail(); });
+
+// ── Disclaimer ─────────────────────────────────────────
+function openDisclaimer() {
+  document.getElementById("disc-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeDisclaimer() {
+  document.getElementById("disc-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+function acceptDisclaimer() {
+  sessionStorage.setItem("msbos-ok","1");
+  closeDisclaimer();
+}
+document.getElementById("disc-overlay").addEventListener("click", e => { if(e.target===document.getElementById("disc-overlay")) closeDisclaimer(); });
+if (!sessionStorage.getItem("msbos-ok")) openDisclaimer();
+
+// ── Feedback ───────────────────────────────────────────
+function openFeedback(proc, preType) {
+  fbProc = proc || null;
+  fbType = preType || null;
+  renderFb();
+  document.getElementById("fb-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeFeedback() {
+  document.getElementById("fb-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+  fbProc = null; fbType = null;
+}
+function selectFbType(t) { fbType = t; renderFb(); }
+
+function renderFb() {
+  const isErr = fbType === "error";
+  const isFb  = fbType === "feedback";
+  document.getElementById("fb-title").textContent = isErr ? "Report an Error" : isFb ? "Submit Feedback" : "Feedback & Error Reporting";
+  document.getElementById("fb-body").innerHTML = `
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px;line-height:1.5">Help us improve this beta tool. Your report goes directly to the Blood Bank team.</p>
+    <div class="fb-type-row">
+      <button class="type-btn${isErr?" sel-err":""}" onclick="selectFbType('error')">
+        <span class="tb-icon">🚩</span><span class="tb-label">Report an Error</span>
+        <span class="tb-sub">Wrong blood order, missing procedure, or incorrect EPIC code</span>
+      </button>
+      <button class="type-btn${isFb?" sel-fb":""}" onclick="selectFbType('feedback')">
+        <span class="tb-icon">💡</span><span class="tb-label">Suggest Improvement</span>
+        <span class="tb-sub">Add a procedure, improve a note, or general feedback</span>
+      </button>
+    </div>
+    ${fbType ? `<div class="fform">
+      <div class="ff">
+        <label>Procedure</label>
+        <input id="fbProc" type="text" value="${fbProc||''}" placeholder="Which procedure does this relate to?">
+      </div>
+      ${isErr?`
+      <div class="ff">
+        <label>Error Type</label>
+        <select id="fbErrType">
+          <option value="">Select error type…</option>
+          <option>Incorrect RBC unit count</option>
+          <option>Wrong blood order category</option>
+          <option>Incorrect or missing EPIC code</option>
+          <option>Missing procedure entirely</option>
+          <option>Incorrect conditions / notes</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="ff">
+        <label>What should it say instead?</label>
+        <textarea id="fbCorrection" placeholder="Describe the correct information according to the official MSBOS policy…"></textarea>
+      </div>`:""}
+      ${isFb?`
+      <div class="ff">
+        <label>Your suggestion</label>
+        <textarea id="fbSuggestion" placeholder="Describe your suggestion or feedback…"></textarea>
+      </div>`:""}
+      <div class="ff">
+        <label>Your name / department <span style="color:var(--muted);font-size:.55rem">(optional)</span></label>
+        <input id="fbName" type="text" placeholder="e.g. Jane S., Blood Bank">
+      </div>
+      <div class="ff-actions">
+        <button class="btn-sub${isErr?" err":""}" onclick="submitFb()">
+          ${isErr?"🚩 Submit Error Report":"💡 Submit Feedback"}
+        </button>
+        <button class="btn-can" onclick="closeFeedback()">Cancel</button>
+      </div>
+    </div>` : `<p style="text-align:center;color:var(--muted);font-size:.85rem;padding:1rem 0">↑ Select a type above to continue</p>`}`;
+}
+
+function submitFb() {
+  const isErr = fbType === "error";
+  const proc  = document.getElementById("fbProc")?.value || "(not specified)";
+  const name  = document.getElementById("fbName")?.value || "Anonymous";
+  const et    = document.getElementById("fbErrType")?.value || "";
+  const corr  = document.getElementById("fbCorrection")?.value || "";
+  const sugg  = document.getElementById("fbSuggestion")?.value || "";
+  const subj  = isErr ? `MSBOS Error Report: ${proc}` : `MSBOS Feedback`;
+  const body  = isErr
+    ? `MSBOS BETA — ERROR REPORT\n\nProcedure: ${proc}\nError Type: ${et}\nCorrection Needed: ${corr}\nSubmitted by: ${name}\n\nPlease verify against official MSBOS policy documents.`
+    : `MSBOS BETA — FEEDBACK\n\nTopic/Procedure: ${proc}\nSuggestion: ${sugg}\nSubmitted by: ${name}`;
+  const mailto = `mailto:?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+  document.getElementById("fb-body").innerHTML = `
+    <div class="fb-success">
+      <div class="sicon">${isErr?"✅":"🙌"}</div>
+      <h3>${isErr?"Error Report Ready":"Feedback Ready"}</h3>
+      <p style="margin-bottom:16px">Your ${isErr?"error report":"feedback"} has been prepared. Click below to open in your email client and send to the Blood Bank team.</p>
+      <a href="${mailto}"><button class="btn-primary" style="margin-bottom:8px">📧 Open in Email</button></a>
+      <button class="btn-ghost" onclick="closeFeedback()">Close</button>
+      <p style="margin-top:16px;font-size:.75rem;color:var(--muted)">No email client? Copy the details and send to your Blood Bank supervisor directly.</p>
+    </div>`;
+}
+document.getElementById("fb-overlay").addEventListener("click", e => { if(e.target===document.getElementById("fb-overlay")) closeFeedback(); });
+
+// ── Filters & Search ───────────────────────────────────
+document.getElementById("dept-filters").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if(!c) return;
+  document.querySelectorAll("#dept-filters .chip").forEach(x=>x.classList.remove("active-dept"));
+  c.classList.add("active-dept"); activeDept = c.dataset.dept; render();
+});
+document.getElementById("cat-filters").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if(!c) return;
+  document.querySelectorAll("#cat-filters .chip").forEach(x=>x.classList.remove("active"));
+  c.classList.add("active"); activeCat = c.dataset.cat; render();
+});
+const searchEl = document.getElementById("search");
+const clearBtn = document.getElementById("search-clear");
+searchEl.addEventListener("input", () => {
+  searchQ = searchEl.value.trim();
+  clearBtn.classList.toggle("visible", searchQ.length > 0);
+  render();
+});
+clearBtn.addEventListener("click", () => {
+  searchEl.value = ""; searchQ = "";
+  clearBtn.classList.remove("visible"); searchEl.focus(); render();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeDetail(); closeFeedback(); closeDisclaimer(); }
+});
+
+render();
+</script>
+</body>
+</html>
